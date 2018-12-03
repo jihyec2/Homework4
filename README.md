@@ -1,13 +1,21 @@
 # EE282 Homework4 (Due December 10) by Jihye Choi(94323474)
 ## <Summarize partitions of a genome assembly>  
+### We will be revisiting the Drosophila melanogaster genome. As with Homework 3, start at flybase.org. Go to the most current download genomes section and download the gzipped fasta file for all chromosomes.
   
+### Hint: The partitioning can be accomplished in many different ways. In my opinion, the easiest way is by using bioawk and faSize. The bioawk tool can be found in the module jje/jjeutils and the fa* utilities can be found in the module jje/kent.
+
 First of all, we change the current directory to **Homework4** and use **wget** to download the data from the given website _flybase.org_. Then we verify the file integrity and unzip the file.  
 
     $ cd Homework4
     $ wget ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-chromosome-r6.24.fasta.gz    
     $ md5sum dmel-all-chromosome-r6.24.fasta.gz  
     $ gunzip dmel-all-chromosome-r6.24.fasta.gz 
-  
+
+Next, we use bioawk tool to accomplish the partitioning. 
+
+    $ module load jje/kent
+    $ faSize dmel-all-chromosome-r6.24.fasta 
+
 ## Calculate the following for all sequences ≤ 100kb and all sequences > 100kb:
 ### 1.Total number of nucleotides
 ### 2.Total number of Ns
