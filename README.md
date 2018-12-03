@@ -11,7 +11,7 @@ First of all, we change the current directory to **Homework4** and use **wget** 
     $ md5sum dmel-all-chromosome-r6.24.fasta.gz  
     $ gunzip dmel-all-chromosome-r6.24.fasta.gz 
 
-Next, we use bioawk tool to accomplish the partitioning. 
+Next, we use **faSize** to accomplish the partitioning. 
 
     $ module load jje/kent
     $ faSize dmel-all-chromosome-r6.24.fasta 
