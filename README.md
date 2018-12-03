@@ -1,7 +1,13 @@
 # EE282 Homework4 (Due December 10) by Jihye Choi(94323474)
-## <Summarize partitions of a genome assembly>
+## <Summarize partitions of a genome assembly>  
+  
+First of all, we change the current directory to **Homework4** and use **wget** to download the data from the given website _flybase.org_. Then we verify the file integrity and unzip the file.  
+  $ cd Homework4
+  $ wget ftp://ftp.flybase.net/genomes/Drosophila_melanogaster/current/fasta/dmel-all-chromosome-r6.24.fasta.gz    
+  $ md5sum dmel-all-chromosome-r6.24.fasta.gz  
+  $ gunzip dmel-all-chromosome-r6.24.fasta.gz 
+  
 ## Calculate the following for all sequences ≤ 100kb and all sequences > 100kb:
-
 ### 1.Total number of nucleotides
 ### 2.Total number of Ns
 ### 3.Total number of sequences
