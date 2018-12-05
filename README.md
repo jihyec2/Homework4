@@ -26,6 +26,7 @@ Next, we load the modules for the **bioawk** and **faSize** tools, and use **bio
         U count: mean 2960.5 sd 96726.1
         L count: mean 0.0 sd 0.0
         %0.00 masked total, %0.00 masked real
+        
     $ faSize dmel_fasta_gre100kb.fasta # for the sequences greater than 100kb
     
         137547960 bases (490385 N's 137057575 real 137057575 upper 0 lower) in 7 sequences in 1 files 
@@ -34,6 +35,7 @@ Next, we load the modules for the **bioawk** and **faSize** tools, and use **bio
         U count: mean 19579653.6 sd 51802894.1
         L count: mean 0.0 sd 0.0
         %0.00 masked total, %0.00 masked real
+        
 
 
 ### For all sequences ≤ 100kb:
