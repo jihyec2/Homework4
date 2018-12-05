@@ -4,6 +4,8 @@
   
 ### Hint: The partitioning can be accomplished in many different ways. In my opinion, the easiest way is by using bioawk and faSize. The bioawk tool can be found in the module jje/jjeutils and the fa* utilities can be found in the module jje/kent.
 
+## Calculate the following for all sequences ≤ 100kb and all sequences > 100kb:
+
 First of all, we change the current directory to **Homework4** and use **wget** to download the data from the given website _flybase.org_. Then we verify the file integrity and unzip the file.  
 
     $ cd Homework4
@@ -11,16 +13,35 @@ First of all, we change the current directory to **Homework4** and use **wget** 
     $ md5sum dmel-all-chromosome-r6.24.fasta.gz  
     $ gunzip dmel-all-chromosome-r6.24.fasta.gz 
 
-Next, we use **faSize** to accomplish the partitioning. 
+Next, we load the modules for the **bioawk** and **faSize** tools, and use **bioawk** to complete the partitioning and to save the files with new names. Then we use **faSize** to calculate the followings.   
 
-    $ module load jje/kent
-    $ faSize dmel-all-chromosome-r6.24.fasta 
+    $ module load jje/jjeutils jje/kent #load modules 
+    $ bioawk -c fastx 'length($seq)  <= 100000{ print ">"$name; print $seq }' dmel-all-chromosome-r6.24.fasta | sort -rn > dmel_fasta_leq100kb.fasta #save it as a new file after partitioning with less than or equal to 100kb
+    $ bioawk -c fastx 'length($seq)  > 100000{ print ">"$name; print $seq }' dmel-all-chromosome-r6.24.fasta | sort -rn > dmel_fasta_gre100kb.fasta #save it as a new file after partitioning with greater than 100kb
+    $ faSize dmel_fasta_leq100kb.fasta 
+        6178042 bases (662593 N's 5515449 real 5515449 upper 0 lower) in 1863 sequences in 1 files
+        Total size: mean 3316.2 sd 108053.8 min 0 (211000022278031) max 4245830 (mitochondrion_genome) median 0
+        N count: mean 355.7 sd 11351.2
+        U count: mean 2960.5 sd 96726.1
+        L count: mean 0.0 sd 0.0
+        %0.00 masked total, %0.00 masked real
+    $ faSize dmel_fasta_gre100kb.fasta 
+        137547960 bases (490385 N's 137057575 real 137057575 upper 0 lower) in 7 sequences in 1 files 
+        Total size: mean 19649708.6 sd 51988242.2 min 0 (2L) max 137547960 (X) median 0
+        N count: mean 70055.0 sd 185348.1
+        U count: mean 19579653.6 sd 51802894.1
+        L count: mean 0.0 sd 0.0
+        %0.00 masked total, %0.00 masked real
 
-## Calculate the following for all sequences ≤ 100kb and all sequences > 100kb:
-### 1.Total number of nucleotides
-### 2.Total number of Ns
-### 3.Total number of sequences
-### Because the calculations will be for two genome partitions, there will be 6 total responses.
+
+### For the sequence ≤ 100kb:
+1.	Total number of nucleotides : 6178042 nucleotides
+2.	Total number of Ns : 662593 N's
+3.	Total number of sequences : 1863 sequences
+### For the sequence > 100kb:
+1.	Total number of nucleotides : 137547960 nucleotides
+2.	Total number of Ns : 490385 N's
+3.	Total number of sequences : 7 sequences
 
 
 
