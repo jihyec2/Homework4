@@ -36,8 +36,6 @@ Next, we load the modules for the **bioawk** and **faSize** tools, and use **bio
         L count: mean 0.0 sd 0.0
         %0.00 masked total, %0.00 masked real
         
-
-
 ### For all sequences ≤ 100kb:
 1.	Total number of nucleotides : 6178042 nucleotides
 2.	Total number of Ns : 662593 N's
@@ -48,20 +46,24 @@ Next, we load the modules for the **bioawk** and **faSize** tools, and use **bio
 3.	Total number of sequences : 7 sequences
 
 
-
-
 ## Plots of the following for the whole genome, for all sequences ≤ 100kb, and all sequences > 100kb:
 
 ### Hint: bioawk has a function called gc(). Don't forget about the CDF plotting utility we used in class.
 
-### 1. Sequence length distribution
-### 2. Sequence GC% distribution
-### 3. Cumulative genome size sorted from largest to smallest sequences
+### For the whole genome:
+1. Sequence length distribution
+2. Sequence GC% distribution
+3. Cumulative genome size sorted from largest to smallest sequences
 
+### For all sequences ≤ 100kb:
+1. Sequence length distribution
+2. Sequence GC% distribution
+3. Cumulative genome size sorted from largest to smallest sequences
 
-### Because the calculations will be for the whole genome and two genome partitions, there will be 9 total plots.
-
-
+### For all sequences > 100kb:
+1. Sequence length distribution
+2. Sequence GC% distribution
+3. Cumulative genome size sorted from largest to smallest sequences
 
 
 ## <Genome assembly>
