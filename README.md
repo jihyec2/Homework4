@@ -59,7 +59,7 @@ First of all, we begin this problem by loading modules.
 1. Sequence length distribution
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
-        $ plotCDF2 dmel_all_seq.length all_seq.png  
+        $ plotCDF2 dmel_all_seq.length all_seq.png  #plot by using CDF plotting utility
         $ ls *.png #list all png files to check if the plot named 'all_seq' exists     
 
 2. Sequence GC% distribution
@@ -69,7 +69,7 @@ First of all, we begin this problem by loading modules.
 1. Sequence length distribution    
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
-        $ plotCDF2 dmel_leq_seq.length leq_seq.png
+        $ plotCDF2 dmel_leq_seq.length leq_seq.png #plot by using CDF plotting utility
         $ ls *.png #list all png files to check if the plot named 'les_seq' exists   
 
 2. Sequence GC% distribution
@@ -79,7 +79,7 @@ First of all, we begin this problem by loading modules.
 1. Sequence length distribution
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_gre100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_gre_seq.length
-        $ plotCDF2 dmel_gre_seq.length gre_seq.png  
+        $ plotCDF2 dmel_gre_seq.length gre_seq.png #plot by using CDF plotting utility  
         $ ls *.png #list all png files to check if the plot named 'gre_seq' exists 
 
 
