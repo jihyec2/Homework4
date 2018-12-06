@@ -57,19 +57,20 @@ First of all, we begin this problem by loading modules.
 
 ### For the whole genome:
 1. Sequence length distribution   
-
-$ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
-$ plotCDF2 dmel_all_seq.length all_seq.png  
-$ ls *.png #list all png files to check if the plot named 'all_seq' exists 
+ 
+    $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
+    $ plotCDF2 dmel_all_seq.length all_seq.png  
+    $ ls *.png #list all png files to check if the plot named 'all_seq' exists   
+    
 2. Sequence GC% distribution
 3. Cumulative genome size sorted from largest to smallest sequences
 
 ### For all sequences ≤ 100kb:
-1. Sequence length distribution  
+1. Sequence length distribution    
 
-$ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
-$ plotCDF2 dmel_leq_seq.length leq_seq.png
-$ ls *.png #list all png files to check if the plot named 'les_seq' exists 
+    $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
+    $ plotCDF2 dmel_leq_seq.length leq_seq.png
+    $ ls *.png #list all png files to check if the plot named 'les_seq' exists   
 
 2. Sequence GC% distribution
 3. Cumulative genome size sorted from largest to smallest sequences
