@@ -114,17 +114,36 @@ First of all, we begin this problem by loading modules.
 ### Hint: Read up on miniasm here. We're using one of the simplest assembly approaches possible. This assembly can literally be accomplished with three lines of code. This will literally take only 3 command lines.
 
 ### 1.Download the reads from here
+    $ module load jje/jjeutils
+    $ module load perl
     $ cd Homework4 #change directory 
     $ mkdir GNassembly #Make directory 
     $ cd GNassembly #change directory to GNassembly
     $ wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz #Download the reads
-    $ ln -s /data/users/jihyec2/Homework4/GNassembly/iso1_onp_a2_1kb.fastq reads.fq
+    $ gunzip iso1_onp_a2_1kb.fastq.gz
+    $ ln -sf iso1_onp_a2_1kb.fastq reads.fq
 
 ### 2.Use minimap to overlap reads
-    $ minimap -x ava-pb -t8 pb-reads.fq pb-reads.fq | gzip -1 > reads.paf.gz
+    #I relogged into hpc and qrsh into a 32 core node
+    $ qrsh -q epyc,abio128,free88i,free72i -pe openmp 32
+    $ cd /data/users/jihyec2/Homework4/GNassembly
+    $ minimap -t 32 -Sw5 -L100 -m0 reads.fq{,} | gzip -1 > onp.paf.gz
 
 ### 3.Use miniasm to construct an assembly
-    $ miniasm -f reads.fq reads.paf.gz > reads.gfa
+    $ miniasm -f reads.fq onp.paf.gz > reads.gfa
+    
+     n50 () {
+  bioawk -c fastx ' { print length($seq); n=n+length($seq); } END { print n; } ' $1 \
+  | sort -rn \
+  | gawk ' NR == 1 { n = $1 }; NR > 1 { ni = $1 + ni; } ni/n > 0.5 { print $1; exit; } '
+}
+
+    awk ' $0 ~/^S/ { print ">" $2" \n" $3 } ' reads.gfa \
+| tee >(n50 /dev/stdin > n50.txt) \
+| fold -w 60 \
+> unitigs.fa
+
+
     
     
 ## Assembly assessment
@@ -132,9 +151,11 @@ First of all, we begin this problem by loading modules.
 ### Hint: For MUMmer, you should run nucmer, delta-filter, and mummerplot.
 Before working on the problems, we first load the following modules. 
 
-    $ module load perl
-    $ module load jje/jjeutils
-    
+# same 
+awk ' $0 ~/^S/ { print ">" $2" \n" $3 } ' reads.gfa | tee >(n50 /dev/stdin > n50.txt) | fold -w 60 > unitigs.fa
+
+
+
 ### 1.Calculate the N50 of your assembly (this can be done with only faSize+awk+sort or with bioawk+awk+sort) and compare it to the Drosophila community reference's contig N50 (here)
 ### 2.Compare your assembly to the contig assembly (not the scaffold assembly!) from Drosophila melanogaster on FlyBase using a dotplot constructed with MUMmer (Hint: use faSplitByN as demonstrated in class)
 ### 3.Compare your assembly to both the contig assembly and the scaffold assembly from the Drosophila melanogaster on FlyBase using a contiguity plot (Hint: use plotCDF2 as demonstrated in class and see this example)
