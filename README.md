@@ -163,8 +163,8 @@ faSplitByN dmel-all-chromosome-r6.24.fasta dmel-all-chromosome-cntg-r6.24.fasta 
 
 # Will do mummer in another folder as a job
 mkdir mummer
-ln -s /pub/jje/ee282/bsorouri/nanopore_assembly1/nanopore_assembly1/data/processed/unitigs.fa
-ln -s /pub/jje/ee282/bsorouir/hmwk4/dmell-all-chromosome-cntg-r6.24.fasta
+ln -s /pub/jje/ee282//nanopore_assembly1/nanopore_assembly1/data/processed/unitigs.fa
+ln -s /pub/jje/ee282//hmwk4/dmell-all-chromosome-cntg-r6.24.fasta
 ls
 touch mummer.sh
 nano mummer.sh # Copy and paste the content below into your shell script, afterwards save and exit out of shell script
