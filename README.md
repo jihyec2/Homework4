@@ -60,11 +60,11 @@ First of all, we begin this problem by loading modules.
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
         $ plotCDF2 dmel_all_seq.length all_seq.png  #plot by using CDF plotting utility
-        $ ls *.png #list all png files to check if the plot named 'all_seq' exists     
+
 
 2. Sequence GC% distribution
 
-        $ bioawk -c fastx '{ print $name, gc($seq) } ' dmel-all-chromosome-r6.24.fasta > dmel_fasta_GC #prepping data files
+        $ bioawk -c fastx '{ print $name, gc($seq) } ' dmel-all-chromosome-r6.24.fasta > GC_all.txt #prepping data files
         $ rstudio #open rstudio through the terminal
         #On RStudio script, we write the following code to get a plot for the sequence GC distribution
         rm(list = ls())
@@ -132,31 +132,115 @@ First of all, we begin this problem by loading modules.
 ### 3.Use miniasm to construct an assembly
     $ miniasm -f reads.fq onp.paf.gz > reads.gfa
     
-     n50 () {
-  bioawk -c fastx ' { print length($seq); n=n+length($seq); } END { print n; } ' $1 \
-  | sort -rn \
-  | gawk ' NR == 1 { n = $1 }; NR > 1 { ni = $1 + ni; } ni/n > 0.5 { print $1; exit; } '
-}
-
-    awk ' $0 ~/^S/ { print ">" $2" \n" $3 } ' reads.gfa \
-| tee >(n50 /dev/stdin > n50.txt) \
-| fold -w 60 \
-> unitigs.fa
-
-
-    
-    
 ## Assembly assessment
 
 ### Hint: For MUMmer, you should run nucmer, delta-filter, and mummerplot.
-Before working on the problems, we first load the following modules. 
-
-# same 
-awk ' $0 ~/^S/ { print ">" $2" \n" $3 } ' reads.gfa | tee >(n50 /dev/stdin > n50.txt) | fold -w 60 > unitigs.fa
-
-
 
 ### 1.Calculate the N50 of your assembly (this can be done with only faSize+awk+sort or with bioawk+awk+sort) and compare it to the Drosophila community reference's contig N50 (here)
+
+    $ n50 () {
+      bioawk -c fastx ' { print length($seq); n=n+length($seq); } END { print n; } ' $1 \
+      | sort -rn \
+      | gawk ' NR == 1 { n = $1 }; NR > 1 { ni = $1 + ni; } ni/n > 0.5 { print $1; exit; } '
+      } 
+    $ awk ' $0 ~/^S/ { print ">" $2" \n" $3 } ' reads.gfa \
+      | tee >(n50 /dev/stdin > n50.txt) \
+      | fold -w 60 \
+      > unitigs.fa
+
 ### 2.Compare your assembly to the contig assembly (not the scaffold assembly!) from Drosophila melanogaster on FlyBase using a dotplot constructed with MUMmer (Hint: use faSplitByN as demonstrated in class)
+      $ faSplitByN dmel-all-chromosome-r6.24.fasta dmel-contig.fasta #making contig assembly
+      $
+      # Need to first make a contig assembly
+
+mkdir MUMmer
+
+ln -s /pub/jje/ee282/bsorouri/nanopore_assembly1/nanopore_assembly1/data/processed/unitigs.fa
+ln -s /pub/jje/ee282/bsorouir/hmwk4/dmell-all-chromosome-cntg-r6.24.fasta
+ls
+touch mummer.sh
+nano mummer.sh # Copy and paste the content below into your shell script, afterwards save and exit out of shell script
+
+#!/bin/bash
+#
+#$ -N mummer
+#$ -q free128,free72i,free56i,free48i,free40i,free32i,free64
+#$ -pe openmp 8
+#$ -R Y
+
+    ###Loading of binaries via module load or PATH reassignment
+    source /pub/jje/ee282/bin/.qmbashrc
+    module load gnuplot
+
+    ###Query and Reference Assignment. State my prefix for output filenames
+    REF="dmel-contig.fasta"
+    PREFIX="flybase"
+    SGE_TASK_ID=1
+    QRY=$(ls u*.fa | head -n $SGE_TASK_ID | tail -n 1)
+    PREFIX=${PREFIX}_$(basename ${QRY} .fa)
+
+    ###please use a value between 75-150 for -c. The value of 1000 is too strict.
+    nucmer -l 100 -c 125 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
+    mummerplot --fat --layout --filter -p ${PREFIX} ${PREFIX}.delta \
+      -R ${REF} -Q ${QRY} --postscript
+
+
+#### This is after you saved and exited out ######
+
+  qsub mummer.sh
+
 ### 3.Compare your assembly to both the contig assembly and the scaffold assembly from the Drosophila melanogaster on FlyBase using a contiguity plot (Hint: use plotCDF2 as demonstrated in class and see this example)
+    bioawk -c fastx ' { print length($seq) } ' dmel-contig.fasta \
+    | sort -rn \
+    | awk ' BEGIN { print "Assembly\tLength\nFB\t0" } { print "FB\t" $1 } ' \
+    >  dmel-contig.length
+
+    bioawk -c fastx ' { print length($seq) } ' unitigs.fa \
+    | sort -rn \
+    | awk ' BEGIN { print "Assembly\tLength\nMinimap_Ctg\t0" } { print "Minimap_Ctg\t" $1 } ' \
+    > unitigs.length
+
+    plotCDF2 {dmel-contig,unitigs}.length assembly.png
+
 ### 4.Calculate BUSCO scores of both assemblies and compare them
+pwd # make sure you are in hmwk4 directory
+touch busco_final8.sh
+nano busco_final8.sh ##### Input and save the code below
+
+#!/bin/bash
+#
+#$ -N busco8
+#$ -q free128,free72i,free56i,free48i,free40i,free32i,free64
+#$ -pe openmp 8
+#$ -R Y 
+
+    module load augustus/3.2.1
+    module load blast/2.2.31 hmmer/3.1b2 boost/1.54.0
+    source /pub/jje/ee282/bin/.buscorc
+
+    INPUTTYPE="geno"
+    MYLIBDIR="/pub/jje/ee282/bin/busco/lineages/"
+    MYLIB="diptera_odb9"
+    OPTIONS="-l ${MYLIBDIR}${MYLIB}"
+    ##OPTIONS="${OPTIONS} -sp 4577"
+    QRY="unitigs.fa"
+    ###Please change this based on your qry file. I.e. .fasta or .fa or .gfa
+    MYEXT=".fa" 
+
+    #my busco run
+    #you can change the value after -c to tell busco how many cores to run on. Here we are using only 1 core.
+    BUSCO.py -c 1 -i ${QRY} -m ${INPUTTYPE} -o $(basename ${QRY} ${MYEXT})_${MYLIB}${SPTAG} ${OPTIONS}      
+
+
+################# After Saving And Exiting Out #####################
+
+qsub busco_final8.sh
+# Note: I used 8 nodes, because it was taking forever in the queue. It took longer to complete, but it still got done.
+
+#### Alternative, manual way of running busco:
+# Need to be careful how we log on and off, but can do the above script manually by first putting the code below, then continuing with the remainder of the code:
+qrsh -q free128,free72i,free56i,free48i,free40i,free32i,free64 -pe openmp 32
+
+
+
+
