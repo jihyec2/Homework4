@@ -143,18 +143,26 @@ First of all, we begin this problem by loading modules.
       | sort -rn \
       | gawk ' NR == 1 { n = $1 }; NR > 1 { ni = $1 + ni; } ni/n > 0.5 { print $1; exit; } '
       } 
+      
     $ awk ' $0 ~/^S/ { print ">" $2" \n" $3 } ' reads.gfa \
       | tee >(n50 /dev/stdin > n50.txt) \
       | fold -w 60 \
       > unitigs.fa
+      
+    $ N50 dmell-contig.fa
+      
 
 ### 2.Compare your assembly to the contig assembly (not the scaffold assembly!) from Drosophila melanogaster on FlyBase using a dotplot constructed with MUMmer (Hint: use faSplitByN as demonstrated in class)
       $ faSplitByN dmel-all-chromosome-r6.24.fasta dmel-contig.fasta #making contig assembly
       $
-      # Need to first make a contig assembly
 
-mkdir MUMmer
+# Need to first make a contig assembly
 
+module load jje/jjeutils perl
+faSplitByN dmel-all-chromosome-r6.24.fasta dmel-all-chromosome-cntg-r6.24.fasta 10
+
+# Will do mummer in another folder as a job
+mkdir mummer
 ln -s /pub/jje/ee282/bsorouri/nanopore_assembly1/nanopore_assembly1/data/processed/unitigs.fa
 ln -s /pub/jje/ee282/bsorouir/hmwk4/dmell-all-chromosome-cntg-r6.24.fasta
 ls
@@ -242,5 +250,19 @@ qsub busco_final8.sh
 qrsh -q free128,free72i,free56i,free48i,free40i,free32i,free64 -pe openmp 32
 
 
+Output:
 
+C:0.5%[S:0.5%,D:0.0%],F:1.1%,M:98.4%,n:2799
+
+13 Complete BUSCOs (C)
+
+13 Complete and single-copy BUSCOs (S)
+
+0 Complete and duplicated BUSCOs (D)
+
+32 Fragmented BUSCOs (F)
+
+2754 Missing BUSCOs (M)
+
+2799 Total BUSCO groups searched
 
