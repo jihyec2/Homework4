@@ -58,15 +58,35 @@ First of all, we begin this problem by loading modules.
 ### For the whole genome:
 1. Sequence length distribution
 
-        $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
-        $ plotCDF2 dmel_all_seq.length all_seq.png  #plot by using CDF plotting utility
-
+        $ bioawk -c fastx '{ print length($seq) }' dmel-all-chromosome-r6.24.fasta > seqlen_all.txt #prepping data files
+        $ rstudio #open rstudio through the terminal
+        
+        #On RStudio script, we write the following code to get a plot for the sequence length distribution
+        
+        library(ggplot2)
+        all_len <- read.table("seqlen_all.txt", header = FALSE)
+        all_len$Percentcut <-cut(x=all_len[,1], breaks = 20)
+        a <- ggplot(data = all_len)+ geom_bar(mapping = aes(Percentcut))
+        a + labs(title="Sequence Length (Whole Genome)", x="Percentage", y="Count") 
+        ggsave("all_seqlen.png")  
 
 2. Sequence GC% distribution
 
-        $ bioawk -c fastx '{ print $name, gc($seq) } ' dmel-all-chromosome-r6.24.fasta > GC_all.txt #prepping data files
+        $ bioawk -c fastx '{ print $name, gc($seq) }' dmel-all-chromosome-r6.24.fasta > GC_all.txt #prepping data files
         $ rstudio #open rstudio through the terminal
+        
         #On RStudio script, we write the following code to get a plot for the sequence GC distribution
+        
+        library(ggplot2)
+        all_GC <- read.table("GC_all.txt", header = FALSE)
+        all_GC$Percentcut <-cut(x=all_GC[,2], breaks = 20)
+        a <- ggplot(data = all_GC)+ geom_bar(mapping = aes(Percentcut))
+        a + labs(title="GC Distribution (Whole Genome)", x="Percentage", y="Count") 
+        ggsave("all_GC.png")  
+        
+        
+        
+        
         rm(list = ls())
         library(ggplot2) 
         library(dplyr)
@@ -85,27 +105,78 @@ First of all, we begin this problem by loading modules.
 
 3. Cumulative genome size sorted from largest to smallest sequences
 
+        $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
+        $ plotCDF2 dmel_all_seq.length all_seq.png  #plot by using CDF plotting utility
+
+
 ### For all sequences ≤ 100kb:
 1. Sequence length distribution    
 
-        $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
-        $ plotCDF2 dmel_leq_seq.length leq_seq.png #plot by using CDF plotting utility
-        $ ls *.png #list all png files to check if the plot named 'les_seq' exists   
+        $ bioawk -c fastx '{ print length($seq) }' dmel_fasta_leq100kb.fasta > seqlen_leq.txt #prepping data files
+        $ rstudio #open rstudio through the terminal
+        
+        #On RStudio script, we write the following code to get a plot for the sequence length distribution
+        
+        library(ggplot2)
+        leq_len <- read.table("seqlen_leq.txt", header = FALSE)
+        leq_len$Percentcut <-cut(x=leq_len[,1], breaks = 20)
+        a <- ggplot(data = leq_len)+ geom_bar(mapping = aes(Percentcut))
+        a + labs(title="Sequence Length (≤ 100kb)", x="Percentage", y="Count") 
+        ggsave("leq_seqlen.png")  
 
 2. Sequence GC% distribution
+
+        $ bioawk -c fastx '{ print $name, gc($seq) }' dmel_fasta_leq100kb.fasta  > GC_leq.txt #prepping data files
+        $ rstudio #open rstudio through the terminal
+        
+        #On RStudio script, we write the following code to get a plot for the sequence GC distribution
+        
+        library(ggplot2)
+        leq_GC <- read.table("GC_leq.txt", header = FALSE)
+        leq_GC$Percentcut <-cut(x=leq_GC[,2], breaks = 20)
+        a <- ggplot(data = leq_GC)+ geom_bar(mapping = aes(Percentcut))
+        a + labs(title="GC Distribution (≤ 100kb)", x="Percentage", y="Count") 
+        ggsave("leq_GC.png")
+        
 3. Cumulative genome size sorted from largest to smallest sequences
+
+        $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
+        $ plotCDF2 dmel_leq_seq.length leq_seq.png #plot by using CDF plotting utility
 
 ### For all sequences > 100kb:
 1. Sequence length distribution
 
-        $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_gre100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_gre_seq.length
-        $ plotCDF2 dmel_gre_seq.length gre_seq.png #plot by using CDF plotting utility  
-        $ ls *.png #list all png files to check if the plot named 'gre_seq' exists 
-
+        $ bioawk -c fastx '{ print length($seq) }' dmel_fasta_gre100kb.fasta > seqlen_gre.txt #prepping data files
+        $ rstudio #open rstudio through the terminal
+        
+        #On RStudio script, we write the following code to get a plot for the sequence length distribution
+        
+        library(ggplot2)
+        gre_len <- read.table("seqlen_gre.txt", header = FALSE)
+        gre_len$Percentcut <-cut(x=gre_len[,1], breaks = 20)
+        a <- ggplot(data = gre_len)+ geom_bar(mapping = aes(Percentcut))
+        a + labs(title="Sequence Length (> 100kb)", x="Percentage", y="Count") 
+        ggsave("gre_seqlen.png")  
 
 2. Sequence GC% distribution
+
+        $ bioawk -c fastx '{ print $name, gc($seq) }' dmel_fasta_gre100kb.fasta  > GC_gre.txt #prepping data files
+        $ rstudio #open rstudio through the terminal
+        
+        #On RStudio script, we write the following code to get a plot for the sequence GC distribution
+        
+        library(ggplot2)
+        gre_GC <- read.table("GC_gre.txt", header = FALSE)
+        gre_GC$cut <-cut(x=gre_GC[,2], breaks = 20)
+        a <- ggplot(data = gre_GC)+ geom_bar(mapping = aes(Percent_cut))
+        a + labs(title="GC Distribution (> 100kb)", x="Percentage", y="Count") 
+        ggsave("gre_GC.png")
+
+
 3. Cumulative genome size sorted from largest to smallest sequences
 
+        $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_gre100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_gre_seq.length
+        $ plotCDF2 dmel_gre_seq.length gre_seq.png #plot by using CDF plotting utility 
 
 ## <Genome assembly>
   
