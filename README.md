@@ -282,16 +282,16 @@ nano mummer.sh # Copy and paste the content below into your shell script, afterw
     plotCDF2 {dmel-contig,unitigs}.length assembly.png
 
 ### 4.Calculate BUSCO scores of both assemblies and compare them
-pwd # make sure you are in hmwk4 directory
-touch busco_final8.sh
-nano busco_final8.sh ##### Input and save the code below
+pwd # make sure you are in hmwk4 directory  
+touch busco_final8.sh  
+nano busco_final8.sh ##### Input and save the code below  
 
-#!/bin/bash
-#
-#$ -N busco8
-#$ -q free128,free72i,free56i,free48i,free40i,free32i,free64
-#$ -pe openmp 8
-#$ -R Y 
+#!/bin/bash  
+#  
+#$ -N busco8  
+#$ -q free128,free72i,free56i,free48i,free40i,free32i,free64  
+#$ -pe openmp 8  
+#$ -R Y   
 
     module load augustus/3.2.1
     module load blast/2.2.31 hmmer/3.1b2 boost/1.54.0
