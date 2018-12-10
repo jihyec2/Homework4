@@ -65,7 +65,7 @@ First of all, we begin this problem by loading modules.
         
         library(ggplot2)
         all_len <- read.table("seqlen_all.txt", header = FALSE)
-        all_len$Percentcut <-cut(x=all_len[,1], breaks = 20)
+        all_len$Percentcut <-cut(x=all_len[,1], breaks = 10)
         a <- ggplot(data = all_len)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="Sequence Length (Whole Genome)", x="Percentage", y="Count") 
         ggsave("all_seqlen.png")  
@@ -84,25 +84,6 @@ First of all, we begin this problem by loading modules.
         a + labs(title="GC Distribution (Whole Genome)", x="Percentage", y="Count") 
         ggsave("all_GC.png")  
         
-        
-        
-        
-        rm(list = ls())
-        library(ggplot2) 
-        library(dplyr)
-        library(splitstackshape)
-
-        setwd("~/Homework4") #set working directory
-        dmel_GC.df <- read.table("~/Homework4/dmel_fasta_GC", header=FALSE, sep = "")
-        colnames(dmel_GC.df) <-c("genomicLocation", "length")
-
-
-        GC_plot <- ggplot(dmel_GC.df, aes(x=percentGC)) + geom_histogram(fill="deepskyblue4") + 
-          ggtitle("Histogram: Sequences by GC content") +
-          labs(x="GC content (%) ", y="number of sequences") +
-          theme(plot.title = element_text(family = "Trebuchet MS", color="#000066", face="bold", size=24)) +
-          theme(axis.title = element_text(family = "Trebuchet MS", color="#666666", face="bold", size=16)) 
-
 3. Cumulative genome size sorted from largest to smallest sequences
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
@@ -119,7 +100,7 @@ First of all, we begin this problem by loading modules.
         
         library(ggplot2)
         leq_len <- read.table("seqlen_leq.txt", header = FALSE)
-        leq_len$Percentcut <-cut(x=leq_len[,1], breaks = 20)
+        leq_len$Percentcut <-cut(x=leq_len[,1], breaks = 10)
         a <- ggplot(data = leq_len)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="Sequence Length (≤ 100kb)", x="Percentage", y="Count") 
         ggsave("leq_seqlen.png")  
@@ -153,7 +134,7 @@ First of all, we begin this problem by loading modules.
         
         library(ggplot2)
         gre_len <- read.table("seqlen_gre.txt", header = FALSE)
-        gre_len$Percentcut <-cut(x=gre_len[,1], breaks = 20)
+        gre_len$Percentcut <-cut(x=gre_len[,1], breaks = 10)
         a <- ggplot(data = gre_len)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="Sequence Length (> 100kb)", x="Percentage", y="Count") 
         ggsave("gre_seqlen.png")  
@@ -175,7 +156,7 @@ First of all, we begin this problem by loading modules.
 
 3. Cumulative genome size sorted from largest to smallest sequences
 
-        $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_gre100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_gre_seq.length
+        $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_gre100kb.fasta | sort -rn | awk ' BEGIN { print           "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_gre_seq.length
         $ plotCDF2 dmel_gre_seq.length gre_seq.png #plot by using CDF plotting utility 
 
 ## <Genome assembly>
@@ -188,7 +169,6 @@ First of all, we begin this problem by loading modules.
     qrsh -q epyc,abio128,free88i,free72i -pe openmp 32    
     #I relogged into hpc and qrsh into a 32 core node
     cd /data/users/jihyec2/Homework4
-    module load jje/jjeutils perl
     wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz
     gunzip *.gz
     ln -sf iso1_onp_a2_1kb.fastq reads.fq
@@ -204,6 +184,7 @@ First of all, we begin this problem by loading modules.
 ### Hint: For MUMmer, you should run nucmer, delta-filter, and mummerplot.
 
 ### 1.Calculate the N50 of your assembly (this can be done with only faSize+awk+sort or with bioawk+awk+sort) and compare it to the Drosophila community reference's contig N50 (here)
+    module load jje/jjeutils perl
 
     $ n50 () {
       bioawk -c fastx ' { print length($seq); n=n+length($seq); } END { print n; } ' $1 \
@@ -216,7 +197,8 @@ First of all, we begin this problem by loading modules.
       | fold -w 60 \
       > unitigs.fa
       
-    $ N50 dmell-contig.fa
+    # When 'ls', we can see the file 'n50.txt'. 
+    4494246
       
 
 ### 2.Compare your assembly to the contig assembly (not the scaffold assembly!) from Drosophila melanogaster on FlyBase using a dotplot constructed with MUMmer (Hint: use faSplitByN as demonstrated in class)
@@ -251,7 +233,6 @@ First of all, we begin this problem by loading modules.
     | sort -rn \
     | awk ' BEGIN { print "Assembly\tLength\nContig\t0" } { print "Contig\t" $1 } ' \
     >  contig
-    
 
     bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta \
     | sort -rn \
@@ -262,7 +243,7 @@ First of all, we begin this problem by loading modules.
 
 
 ### 4.Calculate BUSCO scores of both assemblies and compare them
-pwd # make sure you are in hmwk4 directory  
+
 touch busco_final8.sh  
 nano busco_final8.sh ##### Input and save the code below  
 
