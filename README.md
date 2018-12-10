@@ -185,23 +185,19 @@ First of all, we begin this problem by loading modules.
 ### Hint: Read up on miniasm here. We're using one of the simplest assembly approaches possible. This assembly can literally be accomplished with three lines of code. This will literally take only 3 command lines.
 
 ### 1.Download the reads from here
-    $ module load jje/jjeutils
-    $ module load perl
-    $ cd Homework4 #change directory 
-    $ mkdir GNassembly #Make directory 
-    $ cd GNassembly #change directory to GNassembly
-    $ wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz #Download the reads
-    $ gunzip iso1_onp_a2_1kb.fastq.gz
-    $ ln -sf iso1_onp_a2_1kb.fastq reads.fq
-
-### 2.Use minimap to overlap reads
+    qrsh -q epyc,abio128,free88i,free72i -pe openmp 32    
     #I relogged into hpc and qrsh into a 32 core node
-    $ qrsh -q epyc,abio128,free88i,free72i -pe openmp 32
-    $ cd /data/users/jihyec2/Homework4/GNassembly
-    $ minimap -t 32 -Sw5 -L100 -m0 reads.fq{,} | gzip -1 > onp.paf.gz
+    cd /data/users/jihyec2/Homework4
+    module load jje/jjeutils perl
+    wget https://hpc.oit.uci.edu/~solarese/ee282/iso1_onp_a2_1kb.fastq.gz
+    gunzip *.gz
+    ln -sf iso1_onp_a2_1kb.fastq reads.fq
+    
+### 2.Use minimap to overlap reads
+    minimap -t 32 -Sw5 -L100 -m0 reads.fq{,} | gzip -1 > onp.paf.gz
 
 ### 3.Use miniasm to construct an assembly
-    $ miniasm -f reads.fq onp.paf.gz > reads.gfa
+    miniasm -f reads.fq onp.paf.gz > reads.gfa
     
 ## Assembly assessment
 
@@ -224,29 +220,10 @@ First of all, we begin this problem by loading modules.
       
 
 ### 2.Compare your assembly to the contig assembly (not the scaffold assembly!) from Drosophila melanogaster on FlyBase using a dotplot constructed with MUMmer (Hint: use faSplitByN as demonstrated in class)
-      $ faSplitByN dmel-all-chromosome-r6.24.fasta dmel-contig.fasta #making contig assembly
-      $
 
-# Need to first make a contig assembly
-
-module load jje/jjeutils perl
-faSplitByN dmel-all-chromosome-r6.24.fasta dmel-all-chromosome-cntg-r6.24.fasta 10
-
-# Will do mummer in another folder as a job
-mkdir mummer
-ln -s /pub/jje/ee282//nanopore_assembly1/nanopore_assembly1/data/processed/unitigs.fa
-ln -s /pub/jje/ee282//hmwk4/dmell-all-chromosome-cntg-r6.24.fasta
-ls
-touch mummer.sh
-nano mummer.sh # Copy and paste the content below into your shell script, afterwards save and exit out of shell script
-
-#!/bin/bash
-#
-#$ -N mummer
-#$ -q free128,free72i,free56i,free48i,free40i,free32i,free64
-#$ -pe openmp 8
-#$ -R Y
-
+    faSplitByN dmel-all-chromosome-r6.24.fasta dmel-contig.fasta 10 
+    module unload jje/jjeutils perl
+    
     ###Loading of binaries via module load or PATH reassignment
     source /pub/jje/ee282/bin/.qmbashrc
     module load gnuplot
@@ -259,27 +236,30 @@ nano mummer.sh # Copy and paste the content below into your shell script, afterw
     PREFIX=${PREFIX}_$(basename ${QRY} .fa)
 
     ###please use a value between 75-150 for -c. The value of 1000 is too strict.
-    nucmer -l 100 -c 125 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
-    mummerplot --fat --layout --filter -p ${PREFIX} ${PREFIX}.delta \
-      -R ${REF} -Q ${QRY} --postscript
+    nucmer -l 100 -c 150 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
+    mummerplot --fat --layout --filter -p ${PREFIX} ${PREFIX}.delta -R ${REF} -Q ${QRY} --png
 
-
-#### This is after you saved and exited out ######
-
-  qsub mummer.sh
 
 ### 3.Compare your assembly to both the contig assembly and the scaffold assembly from the Drosophila melanogaster on FlyBase using a contiguity plot (Hint: use plotCDF2 as demonstrated in class and see this example)
+    
+    bioawk -c fastx '{ print length($seq) }' unitigs.fa \
+    | sort -rn \
+    | awk ' BEGIN { print "Assembly\tLength\nMinimap_Unitigs\t0" } { print "Minimap_Unitigs\t" $1 } ' \
+    > mini_unitigs
+
     bioawk -c fastx ' { print length($seq) } ' dmel-contig.fasta \
     | sort -rn \
-    | awk ' BEGIN { print "Assembly\tLength\nFB\t0" } { print "FB\t" $1 } ' \
-    >  dmel-contig.length
+    | awk ' BEGIN { print "Assembly\tLength\nContig\t0" } { print "Contig\t" $1 } ' \
+    >  contig
+    
 
-    bioawk -c fastx ' { print length($seq) } ' unitigs.fa \
+    bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta \
     | sort -rn \
-    | awk ' BEGIN { print "Assembly\tLength\nMinimap_Ctg\t0" } { print "Minimap_Ctg\t" $1 } ' \
-    > unitigs.length
+    | awk ' BEGIN { print "Assembly\tLength\nScaffold\t0" } { print "Scaffold\t" $1 } ' \
+    >  scaffold
 
-    plotCDF2 {dmel-contig,unitigs}.length assembly.png
+    plotCDF2 mini_unitigs contig scaffold Comparison.png
+
 
 ### 4.Calculate BUSCO scores of both assemblies and compare them
 pwd # make sure you are in hmwk4 directory  
@@ -296,6 +276,12 @@ nano busco_final8.sh ##### Input and save the code below
     module load augustus/3.2.1
     module load blast/2.2.31 hmmer/3.1b2 boost/1.54.0
     source /pub/jje/ee282/bin/.buscorc
+    BUSCO.py -c 32 -i unitigs.fa -m geno -o Busco_unitigs -l /pub/jje/ee282/bin/busco/lineages/diptera_odb9
+
+    module load augustus/3.2.1
+    module load blast/2.2.31 hmmer/3.1b2 boost/1.54.0
+    source /pub/jje/ee282/bin/.buscorc
+    BUSCO.py -c 32 -i wg_contigassembly.fasta -m geno -o Busco_contig_assembly -l /pub/jje/ee282/bin/busco/lineages/diptera_odb9
 
     INPUTTYPE="geno"
     MYLIBDIR="/pub/jje/ee282/bin/busco/lineages/"
