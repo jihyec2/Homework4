@@ -84,7 +84,7 @@ First of all, we begin this problem by loading modules.
         a <- ggplot(data = all_GC)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="GC Distribution (Whole Genome)", x="Percentage", y="Count") 
  
-![2]() 
+![2](https://blogfiles.pstatic.net/MjAxODEyMTBfMjc5/MDAxNTQ0NDM4MDU0MDQ1.f-2BX4esbz75UIT5ihd6-Gae_3Nv110wWVOJYm4HvtMg.pDaX9GOEKJLz5kJH74GkpSpj-aV4ZtSOS0eW2moqwRQg.JPEG.nayeonkim93/4.jpeg) 
 
 3. Cumulative genome size sorted from largest to smallest sequences
 
