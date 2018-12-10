@@ -239,22 +239,22 @@ First of all, we begin this problem by loading modules.
     
     bioawk -c fastx '{ print length($seq) }' unitigs.fa \
     | sort -rn \
-    | awk ' BEGIN { print "Assembly\tLength\nMinimap_Unitigs\t0" } { print "Minimap_Unitigs\t" $1 } ' \
+    | awk ' BEGIN { print "Assembly\tLength\nassembly\t0" } { print "assembly\t" $1 } ' \
     > mini_unitigs
 
     bioawk -c fastx ' { print length($seq) } ' dmel-contig.fasta \
     | sort -rn \
-    | awk ' BEGIN { print "Assembly\tLength\nContig\t0" } { print "Contig\t" $1 } ' \
+    | awk ' BEGIN { print "Assembly\tLength\ncontig\t0" } { print "contig\t" $1 } ' \
     >  contig
 
     bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta \
     | sort -rn \
-    | awk ' BEGIN { print "Assembly\tLength\nScaffold\t0" } { print "Scaffold\t" $1 } ' \
+    | awk ' BEGIN { print "Assembly\tLength\nscaffold\t0" } { print "scaffold\t" $1 } ' \
     >  scaffold
 
     plotCDF2 mini_unitigs contig scaffold Comparison.png
 
-
+![8](https://blogfiles.pstatic.net/MjAxODEyMTBfMTAx/MDAxNTQ0NDQxNzg2NzEx.H1BustIvOVqPuzXj9CimHQrhsZBGFoGdk5thJEpPCYog.9hBoDZTXcKop1G8EyYYkHq1F7wGmSp7KZ7gvKnXX6fUg.PNG.nayeonkim93/contig_plot.png)
 ### 4.Calculate BUSCO scores of both assemblies and compare them
 
     #!/bin/bash  
