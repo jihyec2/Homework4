@@ -208,6 +208,8 @@ First of all, we begin this problem by loading modules.
       > unitigs.fa
       
     # When 'ls', we can see the file 'n50.txt'. 
+    $ less n50.txt
+    
     4494246
       
 
@@ -255,28 +257,19 @@ First of all, we begin this problem by loading modules.
 
 ### 4.Calculate BUSCO scores of both assemblies and compare them
 
-touch busco_final8.sh  
-nano busco_final8.sh ##### Input and save the code below  
-
-#!/bin/bash  
-#  
-#$ -N busco8  
-#$ -q free128,free72i,free56i,free48i,free40i,free32i,free64  
-#$ -pe openmp 8  
-#$ -R Y   
+    #!/bin/bash  
+    #  
+    #$ -N HW4_busco  
+    #$ -q free128,free72i,free56i,free48i,free40i,free32i,free64  
+    #$ -pe openmp 32 
+    #$ -R Y   
 
     module load augustus/3.2.1
     module load blast/2.2.31 hmmer/3.1b2 boost/1.54.0
     source /pub/jje/ee282/bin/.buscorc
-    BUSCO.py -c 32 -i unitigs.fa -m geno -o Busco_unitigs -l /pub/jje/ee282/bin/busco/lineages/diptera_odb9
-
-    module load augustus/3.2.1
-    module load blast/2.2.31 hmmer/3.1b2 boost/1.54.0
-    source /pub/jje/ee282/bin/.buscorc
-    BUSCO.py -c 32 -i wg_contigassembly.fasta -m geno -o Busco_contig_assembly -l /pub/jje/ee282/bin/busco/lineages/diptera_odb9
-
+    
     INPUTTYPE="geno"
-    MYLIBDIR="/pub/jje/ee282/bin/busco/lineages/"
+    MYLIBDIR="/data/users/jihyec2/busco/lineages/"
     MYLIB="diptera_odb9"
     OPTIONS="-l ${MYLIBDIR}${MYLIB}"
     ##OPTIONS="${OPTIONS} -sp 4577"
@@ -286,32 +279,15 @@ nano busco_final8.sh ##### Input and save the code below
 
     #my busco run
     #you can change the value after -c to tell busco how many cores to run on. Here we are using only 1 core.
-    BUSCO.py -c 1 -i ${QRY} -m ${INPUTTYPE} -o $(basename ${QRY} ${MYEXT})_${MYLIB}${SPTAG} ${OPTIONS}      
-
-
-################# After Saving And Exiting Out #####################
-
-qsub busco_final8.sh
-# Note: I used 8 nodes, because it was taking forever in the queue. It took longer to complete, but it still got done.
-
-#### Alternative, manual way of running busco:
-# Need to be careful how we log on and off, but can do the above script manually by first putting the code below, then continuing with the remainder of the code:
-qrsh -q free128,free72i,free56i,free48i,free40i,free32i,free64 -pe openmp 32
-
+    BUSCO.py -c 128 -i ${QRY} -m ${INPUTTYPE} -o $(basename ${QRY} ${MYEXT})_${MYLIB}${SPTAG} ${OPTIONS}      
 
 Output:
 
-C:0.5%[S:0.5%,D:0.0%],F:1.1%,M:98.4%,n:2799
-
-13 Complete BUSCOs (C)
-
-13 Complete and single-copy BUSCOs (S)
-
-0 Complete and duplicated BUSCOs (D)
-
-32 Fragmented BUSCOs (F)
-
-2754 Missing BUSCOs (M)
-
+C:0.5%[S:0.5%,D:0.0%],F:1.1%,M:98.4%,n:2799  
+13 Complete BUSCOs (C)  
+13 Complete and single-copy BUSCOs (S)  
+0 Complete and duplicated BUSCOs (D)  
+32 Fragmented BUSCOs (F)  
+2754 Missing BUSCOs (M)  
 2799 Total BUSCO groups searched
 
