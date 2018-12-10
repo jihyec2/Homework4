@@ -89,8 +89,7 @@ First of all, we begin this problem by loading modules.
         $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
         $ plotCDF2 dmel_all_seq.length all_seq.png  #plot by using CDF plotting utility
 
-![all]
-(https://blogfiles.pstatic.net/MjAxODEyMDZfMjMx/MDAxNTQ0MDk2NDA5NjIx.dYbVr_AdfEXVGTCAO-t4T8N7p1Zjqttdrzm9SptmL6Ig.-BELOSgyJzbYZtHz7KGJvXxK93OADlm_55ro2tnSTH0g.PNG.nayeonkim93/length-whole-genome.png)
+![all](https://blogfiles.pstatic.net/MjAxODEyMDZfMjMx/MDAxNTQ0MDk2NDA5NjIx.dYbVr_AdfEXVGTCAO-t4T8N7p1Zjqttdrzm9SptmL6Ig.-BELOSgyJzbYZtHz7KGJvXxK93OADlm_55ro2tnSTH0g.PNG.nayeonkim93/length-whole-genome.png)
 
 ### For all sequences ≤ 100kb:
 1. Sequence length distribution    
@@ -126,8 +125,7 @@ First of all, we begin this problem by loading modules.
         $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
         $ plotCDF2 dmel_leq_seq.length leq_seq.png #plot by using CDF plotting utility
         
-![leq]
-(https://blogfiles.pstatic.net/MjAxODEyMDZfMTIz/MDAxNTQ0MDk2NDE1OTc1.wgP88M7T4ml8YY9kOQf7Kdan9EAsRma3Ob_IVxyzO7kg.W6tvCuNmKciW2upqL0UeNG0tAERO_PIs-lxgjT4KTqcg.PNG.nayeonkim93/length-less-genome.png)
+![leq](https://blogfiles.pstatic.net/MjAxODEyMDZfMTIz/MDAxNTQ0MDk2NDE1OTc1.wgP88M7T4ml8YY9kOQf7Kdan9EAsRma3Ob_IVxyzO7kg.W6tvCuNmKciW2upqL0UeNG0tAERO_PIs-lxgjT4KTqcg.PNG.nayeonkim93/length-less-genome.png)
 
 ### For all sequences > 100kb:
 1. Sequence length distribution
@@ -164,8 +162,7 @@ First of all, we begin this problem by loading modules.
         $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_gre100kb.fasta | sort -rn | awk ' BEGIN { print           "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_gre_seq.length
         $ plotCDF2 dmel_gre_seq.length gre_seq.png #plot by using CDF plotting utility 
 
-![gre]
-(https://blogfiles.pstatic.net/MjAxODEyMDZfMTI0/MDAxNTQ0MDk2NDIyNzk5.Vo5bukEg4yEmMbUl4Nj-TbPIzpZjW8ODyWV-ontO3O0g.hTDhCAvZEppVJodRyZd9sg8o_ELKCaaKU99m4m3L3eIg.PNG.nayeonkim93/length-great-genome.png)
+![gre](https://blogfiles.pstatic.net/MjAxODEyMDZfMTI0/MDAxNTQ0MDk2NDIyNzk5.Vo5bukEg4yEmMbUl4Nj-TbPIzpZjW8ODyWV-ontO3O0g.hTDhCAvZEppVJodRyZd9sg8o_ELKCaaKU99m4m3L3eIg.PNG.nayeonkim93/length-great-genome.png)
 
 ## <Genome assembly>
   
