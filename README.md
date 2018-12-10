@@ -233,7 +233,7 @@ First of all, we begin this problem by loading modules.
     nucmer -l 100 -c 150 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
     mummerplot --fat --layout --filter -p ${PREFIX} ${PREFIX}.delta -R ${REF} -Q ${QRY} --png
 
-![7](https://drive.google.com/file/d/1cVQfIUVjWo43kIf4OSAlWQkOhFfc8z3J/view?usp=sharing)
+I uploaded the dotplot which I constructed with MUMmer on Github because it becomes blurry if I link my png file from my personal blog. 
 
 ### 3.Compare your assembly to both the contig assembly and the scaffold assembly from the Drosophila melanogaster on FlyBase using a contiguity plot (Hint: use plotCDF2 as demonstrated in class and see this example)
     
