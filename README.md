@@ -89,6 +89,8 @@ First of all, we begin this problem by loading modules.
         $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
         $ plotCDF2 dmel_all_seq.length all_seq.png  #plot by using CDF plotting utility
 
+![all]
+(https://drive.google.com/open?id=1wh033ikrg30tHvQUaK-NdyOigeK-K3gP)
 
 ### For all sequences ≤ 100kb:
 1. Sequence length distribution    
