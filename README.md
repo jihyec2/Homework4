@@ -230,7 +230,7 @@ First of all, we begin this problem by loading modules.
     PREFIX=${PREFIX}_$(basename ${QRY} .fa)
 
     ###please use a value between 75-150 for -c. The value of 1000 is too strict.
-    nucmer -l 100 -c 125 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
+    nucmer -l 100 -c 150 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
     mummerplot --fat --layout --filter -p ${PREFIX} ${PREFIX}.delta -R ${REF} -Q ${QRY} --png
 
 ![7](https://drive.google.com/file/d/1cVQfIUVjWo43kIf4OSAlWQkOhFfc8z3J/view?usp=sharing)
@@ -269,7 +269,7 @@ First of all, we begin this problem by loading modules.
     source /pub/jje/ee282/bin/.buscorc
     
     INPUTTYPE="geno"
-    MYLIBDIR="/data/users/jihyec2/busco/lineages/"
+    MYLIBDIR="/pub/jje/ee282/bin/busco/lineages/"
     MYLIB="diptera_odb9"
     OPTIONS="-l ${MYLIBDIR}${MYLIB}"
     ##OPTIONS="${OPTIONS} -sp 4577"
@@ -279,7 +279,7 @@ First of all, we begin this problem by loading modules.
 
     #my busco run
     #you can change the value after -c to tell busco how many cores to run on. Here we are using only 1 core.
-    BUSCO.py -c 128 -i ${QRY} -m ${INPUTTYPE} -o $(basename ${QRY} ${MYEXT})_${MYLIB}${SPTAG} ${OPTIONS}      
+    BUSCO.py -c 125 -i ${QRY} -m ${INPUTTYPE} -o $(basename ${QRY} ${MYEXT})_${MYLIB}${SPTAG} ${OPTIONS}      
 
 Output:
 
