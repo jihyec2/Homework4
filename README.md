@@ -67,7 +67,9 @@ First of all, we begin this problem by loading modules.
         all_len <- read.table("seqlen_all.txt", header = FALSE)
         all_len$Percentcut <-cut(x=all_len[,1], breaks = 10)
         a <- ggplot(data = all_len)+ geom_bar(mapping = aes(Percentcut))
-        a + labs(title="Sequence Length (Whole Genome)", x="Percentage", y="Count") 
+        a + labs(title="Sequence Length (Whole Genome)", x="Length", y="Count") 
+        
+![1](https://blogfiles.pstatic.net/MjAxODEyMTBfMjg2/MDAxNTQ0NDM4MDc5MDU1.vWRQLxcdHCUj4krI574Hw1L2CLIH66ARY5ipcwuJLPcg.zdya5r5EJMIWdJDoFWQd0m--i_pJxmDDgGmaqqmtpt4g.JPEG.nayeonkim93/1.jpeg)
 
 2. Sequence GC% distribution
 
@@ -81,7 +83,9 @@ First of all, we begin this problem by loading modules.
         all_GC$Percentcut <-cut(x=all_GC[,2], breaks = 20)
         a <- ggplot(data = all_GC)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="GC Distribution (Whole Genome)", x="Percentage", y="Count") 
-        
+ 
+![2]() 
+
 3. Cumulative genome size sorted from largest to smallest sequences
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel-all-chromosome-r6.24.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_all_seq.length
@@ -101,7 +105,9 @@ First of all, we begin this problem by loading modules.
         leq_len <- read.table("seqlen_leq.txt", header = FALSE)
         leq_len$Percentcut <-cut(x=leq_len[,1], breaks = 10)
         a <- ggplot(data = leq_len)+ geom_bar(mapping = aes(Percentcut))
-        a + labs(title="Sequence Length (≤ 100kb)", x="Percentage", y="Count") 
+        a + labs(title="Sequence Length (<= 100kb)", x="Length", y="Count") 
+
+![3](https://blogfiles.pstatic.net/MjAxODEyMTBfMjUy/MDAxNTQ0NDM4MDQ3Nzc2.7VvAw_o1USAowuvm6I_eEjuvCk3BIWAh9JzlnKJigX4g.WJ79hA3Yle31WEOBfnkdkOGuBy6XYsPpn9bnCOFm5XQg.JPEG.nayeonkim93/2.jpeg)
 
 2. Sequence GC% distribution
 
@@ -114,8 +120,10 @@ First of all, we begin this problem by loading modules.
         leq_GC <- read.table("GC_leq.txt", header = FALSE)
         leq_GC$Percentcut <-cut(x=leq_GC[,2], breaks = 20)
         a <- ggplot(data = leq_GC)+ geom_bar(mapping = aes(Percentcut))
-        a + labs(title="GC Distribution (≤ 100kb)", x="Percentage", y="Count") 
+        a + labs(title="GC Distribution (<= 100kb)", x="Percentage", y="Count") 
         
+![4](https://blogfiles.pstatic.net/MjAxODEyMTBfMjMy/MDAxNTQ0NDM4MDU3MTk1.sFNP4sDatd1fTNT2ZHIL_7CddRbEoQHrGb3599WN754g.7Q1PtoYY_o-is9hiwYdK9u3yzgP7g6pD3DkBrMi5kjwg.JPEG.nayeonkim93/5.jpeg)
+
 3. Cumulative genome size sorted from largest to smallest sequences
 
         $ bioawk -c fastx ' { print length($seq) } ' dmel_fasta_leq100kb.fasta | sort -rn | awk ' BEGIN { print "Assembly\tLength\nseq_length\t0" } { print "seq_length\t" $1 } ' > dmel_leq_seq.length
@@ -135,7 +143,9 @@ First of all, we begin this problem by loading modules.
         gre_len <- read.table("seqlen_gre.txt", header = FALSE)
         gre_len$Percentcut <-cut(x=gre_len[,1], breaks = 10)
         a <- ggplot(data = gre_len)+ geom_bar(mapping = aes(Percentcut))
-        a + labs(title="Sequence Length (> 100kb)", x="Percentage", y="Count") 
+        a + labs(title="Sequence Length (> 100kb)", x="Length", y="Count") 
+
+![5](https://blogfiles.pstatic.net/MjAxODEyMTBfNTUg/MDAxNTQ0NDM4MDUwNDg4.nNgAkgZnqbhR7cak33_I0uaviX-xxFa3sQyU_VmQqPAg.8wcIJvG0hxkIC4cGl964qyn5ThdmDV7XYbiy4CZSbv4g.JPEG.nayeonkim93/3.jpeg)
 
 2. Sequence GC% distribution
 
@@ -149,6 +159,8 @@ First of all, we begin this problem by loading modules.
         gre_GC$cut <-cut(x=gre_GC[,2], breaks = 20)
         a <- ggplot(data = gre_GC)+ geom_bar(mapping = aes(Percent_cut))
         a + labs(title="GC Distribution (> 100kb)", x="Percentage", y="Count") 
+
+![6](https://blogfiles.pstatic.net/MjAxODEyMTBfMjcw/MDAxNTQ0NDM4MDYwMzUx.0uib88OQ9hcAK0t8zXfonPNL21VYHJWxq8GGEa4L4y0g.hT5FufL2cTMVjxXcbf8pvgcWiXD9yZkV5v54GyUBmqwg.JPEG.nayeonkim93/6.jpeg)
 
 3. Cumulative genome size sorted from largest to smallest sequences
 
