@@ -68,7 +68,6 @@ First of all, we begin this problem by loading modules.
         all_len$Percentcut <-cut(x=all_len[,1], breaks = 10)
         a <- ggplot(data = all_len)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="Sequence Length (Whole Genome)", x="Percentage", y="Count") 
-        ggsave("all_seqlen.png")  
 
 2. Sequence GC% distribution
 
@@ -82,7 +81,6 @@ First of all, we begin this problem by loading modules.
         all_GC$Percentcut <-cut(x=all_GC[,2], breaks = 20)
         a <- ggplot(data = all_GC)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="GC Distribution (Whole Genome)", x="Percentage", y="Count") 
-        ggsave("all_GC.png")  
         
 3. Cumulative genome size sorted from largest to smallest sequences
 
@@ -104,7 +102,6 @@ First of all, we begin this problem by loading modules.
         leq_len$Percentcut <-cut(x=leq_len[,1], breaks = 10)
         a <- ggplot(data = leq_len)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="Sequence Length (≤ 100kb)", x="Percentage", y="Count") 
-        ggsave("leq_seqlen.png")  
 
 2. Sequence GC% distribution
 
@@ -118,7 +115,6 @@ First of all, we begin this problem by loading modules.
         leq_GC$Percentcut <-cut(x=leq_GC[,2], breaks = 20)
         a <- ggplot(data = leq_GC)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="GC Distribution (≤ 100kb)", x="Percentage", y="Count") 
-        ggsave("leq_GC.png")
         
 3. Cumulative genome size sorted from largest to smallest sequences
 
@@ -140,7 +136,6 @@ First of all, we begin this problem by loading modules.
         gre_len$Percentcut <-cut(x=gre_len[,1], breaks = 10)
         a <- ggplot(data = gre_len)+ geom_bar(mapping = aes(Percentcut))
         a + labs(title="Sequence Length (> 100kb)", x="Percentage", y="Count") 
-        ggsave("gre_seqlen.png")  
 
 2. Sequence GC% distribution
 
@@ -154,8 +149,6 @@ First of all, we begin this problem by loading modules.
         gre_GC$cut <-cut(x=gre_GC[,2], breaks = 20)
         a <- ggplot(data = gre_GC)+ geom_bar(mapping = aes(Percent_cut))
         a + labs(title="GC Distribution (> 100kb)", x="Percentage", y="Count") 
-        ggsave("gre_GC.png")
-
 
 3. Cumulative genome size sorted from largest to smallest sequences
 
