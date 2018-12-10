@@ -236,7 +236,7 @@ First of all, we begin this problem by loading modules.
     PREFIX=${PREFIX}_$(basename ${QRY} .fa)
 
     ###please use a value between 75-150 for -c. The value of 1000 is too strict.
-    nucmer -l 100 -c 150 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
+    nucmer -l 100 -c 125 -d 10 -banded -D 5 -prefix ${PREFIX} ${REF} ${QRY}
     mummerplot --fat --layout --filter -p ${PREFIX} ${PREFIX}.delta -R ${REF} -Q ${QRY} --png
 
 
