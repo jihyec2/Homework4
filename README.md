@@ -235,6 +235,8 @@ First of all, we begin this problem by loading modules.
 
 I uploaded the dotplot which I constructed with MUMmer on Github because it becomes blurry if I link my png file from my personal blog. 
 
+### Hi, You should have still embedded the png here
+
 ### 3.Compare your assembly to both the contig assembly and the scaffold assembly from the Drosophila melanogaster on FlyBase using a contiguity plot (Hint: use plotCDF2 as demonstrated in class and see this example)
     
     bioawk -c fastx '{ print length($seq) }' unitigs.fa \
